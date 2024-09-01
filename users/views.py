@@ -49,6 +49,7 @@ class ActivateAccountView(APIView):
 class LoginView(APIView):
     def post(self, request, *args, **kwargs):
         serializer = LoginSerializer(data=request.data)
+        
         if serializer.is_valid():
             user = serializer.validated_data['user']
             token, created = Token.objects.get_or_create(user=user)
