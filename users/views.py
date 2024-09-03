@@ -12,6 +12,9 @@ from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
 from django.contrib.auth import authenticate
 from rest_framework.permissions import IsAuthenticated
+from django_filters.rest_framework import DjangoFilterBackend
+from django.db.models import Q
+from rest_framework.filters import SearchFilter, OrderingFilter
 
 
 class UserRegistrationView(generics.CreateAPIView):
@@ -70,8 +73,24 @@ class LogoutView(APIView):
 class UserListView(generics.ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    filter_backends = (SearchFilter, DjangoFilterBackend, OrderingFilter)
+    search_fields = ['first_name', 'last_name', 'email']  
+    ordering_fields = '__all__'
+    ordering = ['first_name','last_name']  
     # permission_classes = [permissions.IsAuthenticated]  # Optional: Only authenticated users can access
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        search_term = self.request.query_params.get('search', None)
+        if search_term:
+            queryset = queryset.filter(
+                Q(first_name__icontains=search_term) |
+                Q(last_name__icontains=search_term) |
+                Q(email__icontains=search_term) 
+            )
+        return queryset
+    
+    
 class UserDetailView(generics.RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
