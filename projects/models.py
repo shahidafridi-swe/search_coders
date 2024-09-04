@@ -15,3 +15,11 @@ class Project(models.Model):
 
     class Meta:
         ordering = ['created_at', 'title']
+        
+class Review(models.Model):
+    reviewer = models.ForeignKey(User, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    body = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    def __str__(self) -> str:
+        return f"{self.project.title} - {self.reviewer.username}"

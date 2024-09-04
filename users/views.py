@@ -70,23 +70,26 @@ class LogoutView(APIView):
         request.user.auth_token.delete()
         return Response({"message": "Logout successful"}, status=status.HTTP_200_OK)
     
+
 class UserListView(generics.ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     filter_backends = (SearchFilter, DjangoFilterBackend, OrderingFilter)
-    search_fields = ['first_name', 'last_name', 'email']  
+    search_fields = ['first_name', 'last_name', 'email', 'profile__domain', 'profile__location']  
     ordering_fields = '__all__'
-    ordering = ['first_name','last_name']  
-    # permission_classes = [permissions.IsAuthenticated]  # Optional: Only authenticated users can access
+    ordering = ['first_name','last_name']
 
     def get_queryset(self):
         queryset = super().get_queryset()
+
         search_term = self.request.query_params.get('search', None)
         if search_term:
             queryset = queryset.filter(
                 Q(first_name__icontains=search_term) |
                 Q(last_name__icontains=search_term) |
-                Q(email__icontains=search_term) 
+                Q(email__icontains=search_term) |
+                Q(profile__domain__icontains=search_term) |
+                Q(profile__location__icontains=search_term)
             )
         return queryset
     

@@ -1,8 +1,8 @@
 from rest_framework import generics, filters
 from django_filters.rest_framework import DjangoFilterBackend
 from django.db.models import Q
-from .models import Project
-from .serializers import ProjectSerializer
+from .models import Project, Review
+from .serializers import ProjectSerializer, ReviewSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.filters import SearchFilter, OrderingFilter
 from .permissions import IsOwnerOrReadOnly
@@ -39,3 +39,13 @@ class ProjectDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
     permission_classes = permission_classes = [IsOwnerOrReadOnly] 
+
+class ReviewListView(generics.ListCreateAPIView):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+    
+class ReviewDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+    
+    

@@ -4,7 +4,7 @@ from .models import Profile, Skill
 
 @admin.register(Profile)
 class AdminProfile(admin.ModelAdmin):
-    list_display = ['user', 'get_first_name', 'get_last_name', 'get_email']
+    list_display = ['id','user', 'get_first_name', 'get_last_name', 'get_email']
 
     def get_first_name(self, obj):
         return obj.user.first_name
