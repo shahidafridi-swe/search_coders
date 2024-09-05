@@ -6,6 +6,11 @@ from .serializers import ProjectSerializer, ReviewSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.filters import SearchFilter, OrderingFilter
 from .permissions import IsOwnerOrReadOnly
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from .models import Project
+from .serializers import ProjectSerializer
 
 class ProjectListView(generics.ListCreateAPIView):
     queryset = Project.objects.all()
@@ -39,6 +44,8 @@ class ProjectDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
     permission_classes = permission_classes = [IsOwnerOrReadOnly] 
+
+
 
 class ReviewListView(generics.ListCreateAPIView):
     queryset = Review.objects.all()
