@@ -23,4 +23,4 @@ class AdminReview(admin.ModelAdmin):
     def get_project_title(self, obj):
         return obj.project.title
     get_project_title.short_description = 'Project Title' 
-    
+        
